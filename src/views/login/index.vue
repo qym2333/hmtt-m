@@ -119,7 +119,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@toast-background-color: white;
 .login-container {
   .hmtt {
     font-size: 37px;
