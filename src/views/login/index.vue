@@ -3,32 +3,38 @@
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="登录" />
     <!-- /导航栏 -->
+    <div class="login-box">
+      <!-- 登录表单 -->
+      <van-form @submit="onSubmit" ref="loginFormRef">
 
-    <!-- 登录表单 -->
-    <van-form @submit="onSubmit">
-      <van-cell-group>
-        <van-field v-model="user.mobile" name="mobile" placeholder="请输入手机号" clearable :rules="userFormRules.mobile" type="number" maxlength="11">
-          <i slot="left-icon" class="hmtt hmtt-mobile"></i>
+        <van-field v-model="user.mobile" name="mobile" placeholder="请输入手机号" clearable :rules="userFormRules.mobile" type="number" maxlength="11" error-message-align="center">
         </van-field>
-        <van-field v-model="user.code" name="code" placeholder="请输入验证码" :rules="userFormRules.code" type="number" maxlength="6">
-          <i slot="left-icon" class="hmtt hmtt-lock"></i>
+
+        <van-field v-model="user.code" center clearable placeholder="请输入短信验证码" :rules="userFormRules.code" type="number" maxlength="6" error-message-align="center">
           <template #button>
-            <van-button class="send-sms-btn" round size="small" type="default">发送验证码</van-button>
+            <van-count-down v-if="isShowCountDown" :time="1000*60" format="ss s 后重新发送" class="code-btn" @finish="isShowCountDown=false" />
+            <van-button v-else size="small" class="code-btn" native-type="button" @click="onSendCode">发送验证码</van-button>
           </template>
         </van-field>
-      </van-cell-group>
-      <div class="login-btn-wrap">
-        <van-button class="login-btn" block type="info" native-type="submit">
-          登录
-        </van-button>
-      </div>
-    </van-form>
-    <!-- /登录表单 -->
+
+        <div class="protocol-field">
+          <label for="autolog"><input v-model="isAutoLog" name="autolog" type="checkbox" value="1"></label>
+          <span>我已阅读并同意蛤蟆头条的<a href="#">《用户协议》</a></span>
+        </div>
+
+        <div class="login-btn-wrap">
+          <van-button class="login-btn" block type="info" native-type="submit">
+            登录
+          </van-button>
+        </div>
+      </van-form>
+      <!-- /登录表单 -->
+    </div>
   </div>
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 
 export default {
   name: 'LoginIndex',
@@ -36,10 +42,12 @@ export default {
   props: {},
   data () {
     return {
+      // 用户数据
       user: {
         mobile: 13911111111,
-        code: 246810
+        code: ''
       },
+      // 表单校验规则
       userFormRules: {
         mobile: [{
           required: true,
@@ -55,7 +63,10 @@ export default {
           pattern: /^\d{6}$/,
           message: '验证码格式错误'
         }]
-      }
+      },
+      // 倒计时显示
+      isShowCountDown: false,
+      isAutoLog: 1 // 同意协议
     }
   },
   computed: {},
@@ -63,8 +74,8 @@ export default {
   created () { },
   mounted () { },
   methods: {
+    // 点击登录按钮
     async onSubmit () {
-      // 开始转圈圈
       this.$toast.loading({
         duration: 0, // 持续时间，0表示持续展示不停止
         forbidClick: true, // 是否禁止背景点击
@@ -72,8 +83,8 @@ export default {
       })
 
       try {
-        const res = await login(this.user)
-        console.log(res)
+        const { data: res } = await login(this.user)
+        this.$store.commit('setUser', res.data) // VueX 当前用户
         this.$toast.success('登录成功')
       } catch (error) {
         if (error.response.status === 400) {
@@ -82,29 +93,76 @@ export default {
           this.$toast.fail('系统错误，请重试')
         }
       }
+    },
+    // 点击发送验证码
+    async onSendCode () {
+      try {
+        await this.$refs.loginFormRef.validate('mobile')
+      } catch (error) {
+        return this.$toast({
+          position: top,
+          message: error.message
+        })
+      }
+      this.isShowCountDown = true // 显示倒计时
+      try {
+        await sendSms(this.user.mobile)
+        this.$toast.success('发送成功')
+      } catch (error) {
+        if (error.response.status === 429) {
+          this.$toast({ position: top, message: '请勿频繁发送验证码。' })
+        }
+      }
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+@toast-background-color: white;
 .login-container {
   .hmtt {
     font-size: 37px;
     color: #666;
   }
-  .send-sms-btn {
-    height: 46px;
-    line-height: 46px;
-    background-color: #ededed;
-    font-size: 22px;
-    color: #666;
+  .login-box {
+    padding: 60px 60px 0;
   }
+
+  .code-btn {
+    height: 64px;
+    padding: 0 16px;
+    line-height: 64px;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
   .login-btn-wrap {
     padding: 53px 33px;
     .login-btn {
-      background-color: #6db4fb;
-      border: none;
+      background-color: #3296fa;
+      border-radius: 10px;
+      border: 1px solid transparent;
+    }
+  }
+
+  .protocol-field {
+    display: flex;
+    align-items: center;
+    color: rgba(40, 40, 40, 0.5);
+    font-size: 15px;
+    padding: 20px 32px;
+    & > label {
+      margin-top: 2px;
+      margin-right: 10px;
+    }
+    span {
+      a {
+        color: rgba(0, 0, 0, 0.65);
+        font-size: 15px;
+      }
     }
   }
 }
