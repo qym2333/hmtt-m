@@ -1,7 +1,11 @@
 <template>
   <div class="login-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar class="page-nav-bar" title="登录">
+      <template #left>
+        <van-icon name="cross" @click="$router.go(-1)" />
+      </template>
+    </van-nav-bar>
     <!-- /导航栏 -->
     <div class="login-box">
       <!-- 登录表单 -->
@@ -120,9 +124,11 @@ export default {
 
 <style scoped lang="less">
 .login-container {
-  .hmtt {
-    font-size: 37px;
-    color: #666;
+  .page-nav-bar {
+    i {
+      font-size: 42px;
+      color: #fff;
+    }
   }
   .login-box {
     padding: 60px 60px 0;
