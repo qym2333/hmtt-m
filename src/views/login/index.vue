@@ -48,7 +48,7 @@ export default {
     return {
       // 用户数据
       user: {
-        mobile: 13911111111,
+        mobile: 13900000002,
         code: ''
       },
       // 表单校验规则
