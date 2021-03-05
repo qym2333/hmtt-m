@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <!-- 顶部搜索 -->
-    <van-nav-bar class="page-nav-bar">
+    <van-nav-bar class="page-nav-bar" fixed>
       <template>
         <van-button class="search-btn" slot="title" size="small" type="default" round icon="search" color="rgba(255,255,255,.2)">搜 索</van-button>
       </template>
@@ -55,6 +55,7 @@ export default {
 
 <style scoped lang='less'>
 .home-container {
+  padding-top: 175px;
   .page-nav-bar {
     /deep/.van-nav-bar__title {
       max-width: 100%;
@@ -76,6 +77,13 @@ export default {
     // margin-bottom: 28px;
     .van-tabs__nav {
       padding-bottom: 0;
+    }
+    .van-tabs__wrap {
+      position: fixed;
+      top: 92px;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
     .van-tab {
       width: 191px;
