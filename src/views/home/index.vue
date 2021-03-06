@@ -22,7 +22,7 @@
     <!-- 编辑频道弹出层 -->
     <van-popup v-model="isChannelShow" closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }">
       <!-- 弹窗内容 -->
-      <edit-popup></edit-popup>
+      <edit-popup :channels="channels" :active="active"></edit-popup>
     </van-popup>
   </div>
 </template>
