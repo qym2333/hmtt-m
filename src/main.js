@@ -9,15 +9,11 @@ import 'vant/lib/index.css'
 import './styles/index.less'
 // rem适配 动态设置html根节点大小
 import 'amfe-flexible'
-// import './utils/dayjs'
 // 全局过滤器
-import * as filters from './filters'
+import '@/filters'
+
 // Use Vant
 Vue.use(Vant)
-// 过滤器
-Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
-})
 
 Vue.config.productionTip = false
 

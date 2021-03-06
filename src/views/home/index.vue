@@ -12,29 +12,40 @@
         <article-list :channel="item"></article-list>
       </van-tab>
       <template>
-        <div slot="nav-right" class="right-btn">
+        <div slot="nav-right" class="right-btn" @click="isChannelShow=true">
           <i class="hmtt hmtt-more"></i>
         </div>
         <div slot="nav-right" class="placeholder"></div>
       </template>
     </van-tabs>
+
+    <!-- 编辑频道弹出层 -->
+    <van-popup v-model="isChannelShow" closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }">
+      <!-- 弹窗内容 -->
+      <edit-popup></edit-popup>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/ArticleList'
+import EditPopup from './components/EditPopup'
 
 export default {
   name: 'HomeIndex',
+
   data () {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      isChannelShow: false
     }
   },
+
   components: {
-    ArticleList
+    ArticleList,
+    EditPopup
   },
   created () {
     this.loadUserChannels()

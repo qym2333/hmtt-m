@@ -1,9 +1,7 @@
-import dayjs from '@/utils/dayjs'
-
-/**
- * 相对现在日期
- * @param {Date} value 日期
- */
-export function relativeTime (value) {
-  return dayjs().to(dayjs(value))
-}
+import Vue from 'vue'
+// 全局过滤器
+import * as filters from './filters'
+// 过滤器
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
