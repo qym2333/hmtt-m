@@ -20,9 +20,9 @@
     </van-tabs>
 
     <!-- 编辑频道弹出层 -->
-    <van-popup v-model="isChannelShow" closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }">
+    <van-popup v-model="isChannelShow" closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" @close="$refs.editPopRef.isEdit=false">
       <!-- 弹窗内容 -->
-      <edit-popup :channels="channels" :active="active"></edit-popup>
+      <edit-popup ref="editPopRef" :channels="channels" :active="active" @active-changed="onActiveChange"></edit-popup>
     </van-popup>
   </div>
 </template>
@@ -31,6 +31,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/ArticleList'
 import EditPopup from './components/EditPopup'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 
 export default {
   name: 'HomeIndex',
@@ -51,14 +53,29 @@ export default {
     this.loadUserChannels()
   },
 
+  computed: {
+    ...mapState(['user'])
+  },
+
   methods: {
     async loadUserChannels () {
-      try {
-        const { data: res } = await getUserChannels()
-        this.channels = res.data.channels
-      } catch (err) {
-        this.$toast('加载失败')
+      // TODO: 控制未登录状态下首次不存在本地数据
+      if (!this.user) {
+        // 未登录
+        this.channels = getItem('TOTIAO_CHANNEL')
+      } else {
+        try {
+          const { data: res } = await getUserChannels()
+          this.channels = res.data.channels
+        } catch (err) {
+          this.$toast('加载失败')
+        }
       }
+    },
+    onActiveChange (val, isEdit) {
+      // console.log(val)
+      this.active = val
+      this.isChannelShow = isEdit
     }
   }
 }
