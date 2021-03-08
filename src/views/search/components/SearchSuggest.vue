@@ -1,12 +1,14 @@
 <template>
   <div>
-
-    <van-cell v-for="(item,index) in suggestions" :key="index" :title="item" icon="search" />
+    <van-cell v-for="(item,index) in suggestions" :key="index" icon="search">
+      <div slot="title" v-html="keywordFormat(item)"></div>
+    </van-cell>
   </div>
 </template>
 
 <script>
 import { getSuggestions } from '@/api/search'
+import { debounce } from 'lodash'
 export default {
   props: {
     searchText: {
@@ -18,8 +20,7 @@ export default {
 
   data () {
     return {
-      suggestions: [],
-      timer: null
+      suggestions: []
     }
   },
 
@@ -36,17 +37,19 @@ export default {
       } catch (err) {
         this.$toast('请求失败')
       }
+    },
+    // 关键字高亮
+    keywordFormat (val) {
+      const reg = new RegExp(this.searchText, 'gi') // 全局匹配 忽略大小写
+      return val.replace(reg, `<span style="color:red">${this.searchText}</span>`)
     }
   },
 
   watch: {
     searchText: {
-      handler (value) {
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          this.getSuggestions()
-        }, 800)
-      },
+      handler: debounce(function () {
+        this.getSuggestions()
+      }, 700),
       immediate: true // 侦听开始后立即调用
     }
   }
