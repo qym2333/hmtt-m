@@ -3,7 +3,7 @@
     <!-- 顶部搜索 -->
     <van-nav-bar class="page-nav-bar" fixed>
       <template>
-        <van-button class="search-btn" slot="title" size="small" type="default" round icon="search" color="rgba(255,255,255,.2)">搜 索</van-button>
+        <van-button class="search-btn" slot="title" size="small" type="default" round icon="search" color="rgba(255,255,255,.2)" to="/search">搜 索</van-button>
       </template>
     </van-nav-bar>
     <!-- tab -->
