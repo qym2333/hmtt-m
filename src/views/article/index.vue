@@ -134,6 +134,15 @@ export default {
 
 <style scoped lang="less">
 .article-container {
+  /deep/.page-nav-bar {
+    .van-nav-bar__content {
+      .van-nav-bar__left {
+        i.van-icon {
+          color: #fff;
+        }
+      }
+    }
+  }
   .main-wrap {
     position: fixed;
     left: 0;
