@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-cell v-for="(item,index) in suggestions" :key="index" icon="search">
-      <div slot="title" v-html="keywordFormat(item)"></div>
+      <div slot="title" v-html="keywordFormat(item)" @click="$emit('onSearch',item)"></div>
     </van-cell>
   </div>
 </template>
@@ -40,8 +40,8 @@ export default {
     },
     // 关键字高亮
     keywordFormat (val) {
-      const reg = new RegExp(this.searchText, 'gi') // 全局匹配 忽略大小写
-      return val.replace(reg, `<span style="color:red">${this.searchText}</span>`)
+      const reg = new RegExp(`(${this.searchText})`, 'gi') // 全局匹配、忽略大小写
+      return val.replace(reg, ('<span style="color:red">$1</span>'))
     }
   },
 

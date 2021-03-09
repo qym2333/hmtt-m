@@ -15,3 +15,15 @@ export const getSuggestions = q => {
     params: { q }
   })
 }
+
+/**
+ * 获取搜索结果
+ * @param {Object} params {page:页，per_page:页大小，q:关键字}
+ */
+export const getSearchList = params => {
+  return request({
+    url: '/v1_0/search',
+    method: 'GET',
+    params
+  })
+}
