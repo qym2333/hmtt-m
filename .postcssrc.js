@@ -15,7 +15,8 @@ module.exports = {
         // 其他样式 1rem = 75px
         return file.indexOf('vant') !== -1 ? 37.5 : 75
       },
-      propList: ['*']
+      propList: ['*'],
+      exclude: 'github-markdown'
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="article-item">
 
-    <van-cell :title="article.title">
+    <van-cell :title="article.title" :to="`/article/${article.art_id}`">
       <!-- 自定义label -->
       <template #label>
         <div class="article-label">

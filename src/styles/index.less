@@ -1,12 +1,23 @@
 // 全局字体图标
 @import './icon.less';
 
-html,body,#app,.layout-container{
+html,
+body,
+#app,
+.layout-container {
   height: 100%;
 }
+
 .page-nav-bar {
   background-color: #3296fa;
+
   .van-nav-bar__title {
     color: #fff;
   }
- }
+
+  /deep/.van-nav-bar__left {
+    .van-nav-bar .van-icon {
+      color: #fff;
+    }
+  }
+}

@@ -2,7 +2,7 @@
   <div class="article-list">
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh" :success-text="tipText" :success-duration="1500">
       <van-list class="my-list" v-model="loading" :finished="finished" finished-text="莫得了" @load="onLoad" :error.sync="error" error-text="外星人入侵，点击快逃">
-        <article-item v-for="item in list" :key="item.art_id" :article="item"></article-item>
+        <article-item v-for="(item,index) in list" :key="index" :article="item"></article-item>
       </van-list>
     </van-pull-refresh>
   </div>

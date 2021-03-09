@@ -20,6 +20,8 @@
 import SearchHistory from './components/SearchHistory'
 import SearchSuggest from './components/SearchSuggest'
 import SearchResults from './components/SearchResults'
+import { setItem, getItem } from '@/utils/storage.js'
+const HISTORY_KEY = 'TOTIAO_HISTORY'
 export default {
   name: 'search',
   components: {
@@ -32,7 +34,7 @@ export default {
       value: '',
       isShowResult: false,
       // 搜索历史
-      searchHistory: []
+      searchHistory: getItem(HISTORY_KEY) || []
     }
   },
 
@@ -40,6 +42,11 @@ export default {
 
   },
 
+  watch: {
+    searchHistory (val) {
+      setItem(HISTORY_KEY, val)
+    }
+  },
   methods: {
     onSearch (val) {
       // 关键字为空
