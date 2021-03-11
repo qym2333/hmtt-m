@@ -18,7 +18,6 @@
         <div slot="nav-right" class="placeholder"></div>
       </template>
     </van-tabs>
-
     <!-- 编辑频道弹出层 -->
     <van-popup v-model="isChannelShow" closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" @close="$refs.editPopRef.isEdit=false">
       <!-- 弹窗内容 -->
@@ -52,7 +51,8 @@ export default {
   created () {
     this.loadUserChannels()
   },
-
+  mounted () {
+  },
   computed: {
     ...mapState(['user'])
   },

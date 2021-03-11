@@ -22,18 +22,27 @@
           <van-image class="avatar" slot="icon" round fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <div slot="title" class="user-name">{{article.aut_name}}</div>
           <div slot="label" class="publish-date">{{article.pubdate | relativeTime}}</div>
-          <van-button class="follow-btn" type="info" color="#3296fa" round size="small" icon="plus">关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+
+          <!-- 如果一个数据，既需要传递给子组件使用，并且子组件还要修改这个数据，建议使用v-model来解决这个问题 -->
+          <!-- 关注按钮 -->
+          <follow-user v-model="article.is_followed" @update-isFollowed="article.is_followed=$event" :aut-id="article.aut_id"></follow-user>
+          <!-- <follow-user :is-followed="article.is_followed" @update-isFollowed="article.is_followed=$event" :aut-id="article.aut_id"></follow-user> -->
+
         </van-cell>
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
         <div class="article-content markdown-body" ref="articleContent" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
+          <van-icon name="comment-o" badge="123" color="#777" />
+          <collect-article v-model="article.is_collected"></collect-article>
+          <van-icon color="#777" name="good-job-o" />
+          <van-icon name="share" color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -52,16 +61,6 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
-
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
-      <van-icon name="comment-o" badge="123" color="#777" />
-      <van-icon color="#777" name="star-o" />
-      <van-icon color="#777" name="good-job-o" />
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
@@ -69,9 +68,14 @@
 import { getArticleById } from '@/api/article.js'
 import './github-markdown.css'
 import { ImagePreview } from 'vant'
+import followUser from '@/components/FollowUser'
+import collectArticle from '@/components/CollectArticle'
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    followUser,
+    collectArticle
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
@@ -82,7 +86,8 @@ export default {
     return {
       article: {},
       isLoading: false,
-      is404: false
+      is404: false,
+      isfollowLoading: false
     }
   },
   computed: {},
@@ -128,6 +133,7 @@ export default {
         }
       })
     }
+
   }
 }
 </script>
