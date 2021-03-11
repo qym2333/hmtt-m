@@ -34,11 +34,13 @@
         <!-- 文章内容 -->
         <div class="article-content markdown-body" ref="articleContent" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
+
+        <article-comment :type="a"></article-comment>
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
           <van-icon name="comment-o" badge="123" color="#777" />
-          <collect-article v-model="article.is_collected"></collect-article>
+          <collect-article v-model="article.is_collected" :article-id="article.art_id"></collect-article>
           <van-icon color="#777" name="good-job-o" />
           <van-icon name="share" color="#777777"></van-icon>
         </div>
@@ -68,13 +70,18 @@
 import { getArticleById } from '@/api/article.js'
 import './github-markdown.css'
 import { ImagePreview } from 'vant'
+// 关注用户
 import followUser from '@/components/FollowUser'
+// 收藏文章
 import collectArticle from '@/components/CollectArticle'
+// 评论组件
+import articleComment from './components/ArticleComment'
 export default {
   name: 'ArticleIndex',
   components: {
     followUser,
-    collectArticle
+    collectArticle,
+    articleComment
   },
   props: {
     articleId: {
@@ -102,6 +109,7 @@ export default {
       try {
         // 随机错误
         // throw Error()
+        this.isLoading = true
         const { data } = await getArticleById(this.articleId)
         this.article = data.data
         this.isLoading = false

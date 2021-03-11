@@ -10,6 +10,10 @@ export default {
     value: {
       type: Boolean,
       required: true
+    },
+    articleId: {
+      type: [String, Number, Object],
+      required: true
     }
   },
   data () {
@@ -24,13 +28,20 @@ export default {
 
   methods: {
     // 点击收藏图标
-    onCollect () {
-      if (this.value) {
-        // 已收藏 取消收藏
-        this.$toast('取消收藏')
-      } else {
-        // 未收藏 添加收藏
-        this.$toast('已收藏')
+    async onCollect () {
+      try {
+        if (this.value) {
+          // 已收藏 取消收藏
+          await deleteCollect(this.articleId)
+        } else {
+          // 未收藏 添加收藏
+          await addCollect(this.articleId)
+        }
+        // 更新视图
+        this.$emit('input', !this.value)
+        this.$toast.success(this.value ? '取消收藏' : '收藏成功')
+      } catch (err) {
+        this.$toast('操作失败')
       }
     }
   }
