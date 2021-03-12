@@ -14,3 +14,26 @@ export const getCommentList = params => {
     params
   })
 }
+
+/**
+ * 取消点赞评论
+ * @param {String} id 评论id
+ */
+export const delCommentLike = id => {
+  return request({
+    url: '/v1_0/comment/likings/' + id,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * 点赞评论
+ * @param {String} id 评论id
+ */
+export const addCommentLike = id => {
+  return request({
+    url: '/v1_0/comment/likings',
+    method: 'POST',
+    data: { target: id }
+  })
+}

@@ -3,7 +3,7 @@
     <van-image slot="icon" class="avatar" round fit="cover" :src="comment.aut_photo" />
     <div slot="title" class="title-wrap">
       <div class="user-name">{{comment.aut_name}}</div>
-      <van-button class="like-btn" icon="good-job-o">{{comment.like_count || '赞'}}</van-button>
+      <van-button @click="onLikeComment" class="like-btn" :icon="comment.is_liking?'good-job':'good-job-o'" :style="{color:comment.is_liking?'#e22829':'rgba(0,0,0,0.5)'}">{{comment.like_count || '赞'}}</van-button>
     </div>
 
     <div slot="label">
@@ -17,6 +17,9 @@
 </template>
 
 <script>
+// 点赞、取消取消点赞接口
+import { addCommentLike, delCommentLike } from '@/api/comment.js'
+
 export default {
   name: 'CommentItem',
   components: {},
@@ -33,7 +36,25 @@ export default {
   watch: {},
   created () { },
   mounted () { },
-  methods: {}
+  methods: {
+    // 点赞评论
+    async onLikeComment () {
+      try {
+        if (this.comment.is_liking) {
+          // 取消点赞
+          await delCommentLike(this.comment.com_id)
+          this.comment.like_count--
+        } else {
+          // 点赞
+          await addCommentLike(this.comment.com_id)
+          this.comment.like_count++
+        }
+        this.comment.is_liking = !this.comment.is_liking
+      } catch (err) {
+        this.$toast('操作失败')
+      }
+    }
+  }
 }
 </script>
 
