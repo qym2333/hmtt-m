@@ -1,7 +1,7 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" @click-left="$router.go(-1)" left-arrow title="黑马头条"></van-nav-bar>
+    <van-nav-bar class="page-nav-bar" @click-left="$router.go(-1)" left-arrow title="蛤蟆头条"></van-nav-bar>
     <!-- /导航栏 -->
 
     <div class="main-wrap">
@@ -34,12 +34,13 @@
         <!-- 文章内容 -->
         <div class="article-content markdown-body" ref="articleContent" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
-
-        <article-comment :type="a"></article-comment>
+        <!-- 评论列表模块 -->
+        <article-comment :source="articleId" @update-count="total_cnt = $event"></article-comment>
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
-          <van-icon name="comment-o" badge="123" color="#777" />
+          <van-icon name="comment-o" :badge="
+      total_cnt" color="#777" />
           <collect-article v-model="article.is_collected" :article-id="article.art_id"></collect-article>
           <van-icon color="#777" name="good-job-o" />
           <van-icon name="share" color="#777777"></van-icon>
@@ -94,7 +95,8 @@ export default {
       article: {},
       isLoading: false,
       is404: false,
-      isfollowLoading: false
+      isfollowLoading: false,
+      total_cnt: 0
     }
   },
   computed: {},

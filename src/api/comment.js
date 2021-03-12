@@ -9,7 +9,7 @@ import request from '@/utils/request.js'
  */
 export const getCommentList = params => {
   return request({
-    url: '/1_0/comments',
+    url: '/v1_0/comments',
     method: 'GET',
     params
   })
