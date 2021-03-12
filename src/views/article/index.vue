@@ -35,10 +35,10 @@
         <div class="article-content markdown-body" ref="articleContent" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
         <!-- 评论列表模块 -->
-        <article-comment :source="articleId" @update-count="total_cnt = $event"></article-comment>
+        <article-comment :source="articleId" @update-count="total_cnt = $event" :list="commentList"></article-comment>
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
+          <van-button class="comment-btn" type="default" round size="small" @click="isShowCommentPop=!isShowCommentPop">写评论</van-button>
           <van-icon name="comment-o" :badge="
       total_cnt" color="#777" />
           <collect-article v-model="article.is_collected" :article-id="article.art_id"></collect-article>
@@ -64,6 +64,12 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+
+    <!-- 写评论弹出层 -->
+    <van-popup v-model="isShowCommentPop" position="bottom">
+      <post-comment :articleId="articleId" @success-post="onSuccessPost"></post-comment>
+    </van-popup>
+
   </div>
 </template>
 
@@ -77,12 +83,16 @@ import followUser from '@/components/FollowUser'
 import collectArticle from '@/components/CollectArticle'
 // 评论组件
 import articleComment from './components/ArticleComment'
+// 评论弹框内容
+import postComment from './components/PostComment'
+
 export default {
   name: 'ArticleIndex',
   components: {
     followUser,
     collectArticle,
-    articleComment
+    articleComment,
+    postComment
   },
   props: {
     articleId: {
@@ -96,7 +106,9 @@ export default {
       isLoading: false,
       is404: false,
       isfollowLoading: false,
-      total_cnt: 0
+      total_cnt: 0,
+      isShowCommentPop: false,
+      commentList: []
     }
   },
   computed: {},
@@ -127,6 +139,11 @@ export default {
         // 加载完成
         this.isLoading = false
       }
+    },
+    // 发布评论成功
+    onSuccessPost (data) {
+      this.commentList.unshift(data) // 插入最新评论
+      this.isShowCommentPop = false // 隐藏弹框
     },
     // 图片预览
     previewImg () {

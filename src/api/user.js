@@ -72,3 +72,13 @@ export const unfollowUser = target => {
     method: 'DELETE'
   })
 }
+
+/**
+ * 获取用户个人信息
+ */
+export const getProfileInfo = () => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'GET'
+  })
+}

@@ -37,3 +37,15 @@ export const addCommentLike = id => {
     data: { target: id }
   })
 }
+/**
+ * 发布评论
+ * @param {Object} data
+*  {target:评论目标的id||content:评论内容||art_id:回复的评论所在的文章||非必须}
+ */
+export const postComment = data => {
+  return request({
+    url: '/v1_0/comments',
+    method: 'POST',
+    data
+  })
+}
